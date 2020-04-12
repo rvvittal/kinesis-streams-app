@@ -1,2 +1,2 @@
 # kinesis-streams-app
-kinesis streams app
+kinesis streams application
