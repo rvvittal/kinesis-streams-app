@@ -85,12 +85,19 @@ public class StockOrderTradesWriter {
     		private static void sendStockTrade(StockOrder order, KinesisAsyncClient kinesisClient,
     	            String orderStream, String tradeStream) {
     			
+    			StockTrade trade = order.getStockTrade();
+    	        
+    	        order.setStockTrade(null);
+    			
     	        byte[] bytes = order.toJsonAsBytes();
+    	        
     	        // The bytes could be null if there is an issue with the JSON serialization by the Jackson JSON library.
     	        if (bytes == null) {
     	            LOG.warn("Could not get JSON bytes for stock trade");
     	            return;
     	        }
+    	        
+    	        
 
     	        LOG.info("Putting order: " + order.toString());
     	        PutRecordRequest request = PutRecordRequest.builder()
@@ -107,11 +114,11 @@ public class StockOrderTradesWriter {
     	        }
     	        
     	        
-    	        StockTrade trade = order.getStockTrade();
+    	        
     	       // LOG.info(trade.);
     	        byte[] tradeBytes = trade.toJsonAsBytes();
     	        
-    	        LOG.info("Putting trade: " + order.getStockTrade().toString());
+    	        LOG.info("Putting trade: " + trade.toString());
     	         request = PutRecordRequest.builder()
     	                .partitionKey(trade.getTickerSymbol()) // We use the ticker symbol as the partition key, explained in the Supplemental Information section below.
     	                .streamName(tradeStream)

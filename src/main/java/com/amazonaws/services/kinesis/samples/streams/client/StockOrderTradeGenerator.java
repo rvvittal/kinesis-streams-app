@@ -104,6 +104,8 @@ public class StockOrderTradeGenerator {
                                                           // and MAX_QUANTITY (exclusive). we want at least 1 share.
         
         double amount =  price * quantity; 
+        amount = Math.round(amount * 100.0) / 100.0;
+        
         long orderId = orderIdSeq.getAndIncrement();
         
         StockOrder order =  new StockOrder(stockPrice.tickerSymbol, amount, orderId,tradeType);
